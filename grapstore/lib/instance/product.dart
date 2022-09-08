@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:grapstore/widget/inc/cartWidget.dart';
 import 'package:grapstore/widget/product.dart';
-
 import '../model/product.dart';
 import '../widget/inc/productAppBarWidget.dart';
 
 class Product extends StatefulWidget {
-  final int id;
+  final String id;
 
   const Product(this.id, {Key? key}) : super(key: key);
 
@@ -19,7 +19,6 @@ class _ProductState extends State<Product> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     loadProductDetails(widget.id);
   }
@@ -27,16 +26,18 @@ class _ProductState extends State<Product> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: const PreferredSize(
         preferredSize: Size.fromHeight(kToolbarHeight),
         child: ProductAppBar(),
       ),
       body: ProductDetailsWidget(_data, isLoaded),
       bottomNavigationBar: ProductDetailsBottomNavWidget(_data, isLoaded),
+      endDrawer: CartWidget(),
     );
   }
 
-  void loadProductDetails(int id) async {
+  void loadProductDetails(String id) async {
     ProductModel productModel = ProductModel();
     _data = await productModel.details(id) as Map;
     setState(() {

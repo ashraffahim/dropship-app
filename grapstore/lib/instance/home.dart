@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grapstore/widget/inc/cartWidget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../widget/inc/bottomNavWidget.dart';
 import '../widget/inc/homeAppBarWidget.dart';
@@ -13,13 +14,13 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
   var _data = [];
   bool isLoaded = false;
   int navIndex = 0;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     loadHome();
   }
@@ -33,6 +34,7 @@ class _HomeState extends State<Home> {
       ),
       body: HomeWidget(_data, isLoaded),
       bottomNavigationBar: BottomNavWidget(navIndex, bottomNavigationTapped),
+      endDrawer: CartWidget(),
     );
   }
 
@@ -54,6 +56,10 @@ class _HomeState extends State<Home> {
         break;
       }
     }
+    if (index == 2) {
+      Scaffold.of(context).openEndDrawer();
+    }
+
     setState(() {
       navIndex = index;
     });

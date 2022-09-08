@@ -22,7 +22,7 @@ class HomeWidget extends StatelessWidget {
       return ListView.separated(
         itemBuilder: (context, index) {
           return InkWell(
-            onTap: () => viewProduct(context, int.parse(_data[index]['id'])),
+            onTap: () => viewProduct(context, _data[index]['id'].toString()),
             child: Row(
               children: [
                 Container(
@@ -78,7 +78,7 @@ class HomeWidget extends StatelessWidget {
     }
   }
 
-  void viewProduct(context, int id) {
+  void viewProduct(context, String id) {
     Navigator.pushNamed(context, '/product', arguments: id);
   }
 }

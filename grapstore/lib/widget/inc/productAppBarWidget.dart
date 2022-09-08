@@ -6,9 +6,16 @@ class ProductAppBar extends StatelessWidget {
   @override
   PreferredSizeWidget build(BuildContext context) {
     return AppBar(
-      title: const Text('Details'),
-      centerTitle: true,
-      backgroundColor: Colors.white70,
+      leading: const BackButton(),
+      actions: [
+        IconButton(
+          onPressed: () {
+            Scaffold.of(context).openEndDrawer();
+          },
+          icon: const Icon(Icons.shopping_bag),
+        )
+      ],
+      backgroundColor: Colors.transparent,
       foregroundColor: Colors.black87,
       shadowColor: Colors.black12,
     );

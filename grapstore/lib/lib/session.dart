@@ -17,6 +17,8 @@ class Session {
   }
 
   post(String url, Map data) async {
+    final SharedPreferences prefs = await _prefs;
+    headers['cookie'] = prefs.getString('cookie') ?? '';
     http.Response response = await http.post(
       Uri.parse(Config.serverAddr + url),
       body: data,

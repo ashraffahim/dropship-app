@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:grapstore/env/config.dart';
 
+import '../lib/cart.dart';
+
 class ProductDetailsWidget extends StatefulWidget {
   final Map _data;
   final items = <Widget>[];
@@ -11,7 +13,7 @@ class ProductDetailsWidget extends StatefulWidget {
   ProductDetailsWidget(this._data, this.isLoaded, {Key? key})
       : super(key: key) {
     if (isLoaded) {
-      for (var i = 0; i < int.parse(_data['p_image']); i++) {
+      for (var i = 0; i < _data['p_image']; i++) {
         items.add(
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -39,82 +41,80 @@ class _ProductDetailsWidgetState extends State<ProductDetailsWidget> {
   Widget build(BuildContext context) {
     return !widget.isLoaded
         ? const CircularProgressIndicator()
-        : SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  CarouselSlider(
-                    items: widget.items,
-                    options: CarouselOptions(
-                      height: 400,
-                      enableInfiniteScroll: false,
-                      enlargeCenterPage: true,
-                      onPageChanged: (index, reason) =>
-                          carouselPageChange(index, reason),
-                    ),
+        : SingleChildScrollView(
+            child: Column(
+              children: [
+                CarouselSlider(
+                  items: widget.items,
+                  options: CarouselOptions(
+                    height: 400,
+                    enableInfiniteScroll: false,
+                    enlargeCenterPage: true,
+                    onPageChanged: (index, reason) =>
+                        carouselPageChange(index, reason),
                   ),
-                  Container(
-                    margin: const EdgeInsets.symmetric(
-                      vertical: 30,
-                    ),
-                    alignment: Alignment.center,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: widget.indicatorList.map((i) {
-                        return Builder(
-                          builder: (BuildContext context) {
-                            return AnimatedContainer(
-                              margin: const EdgeInsets.symmetric(horizontal: 5),
-                              width: i == widget.indicatorIndex ? 20 : 10,
-                              height: 10,
-                              duration: const Duration(milliseconds: 100),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: i == widget.indicatorIndex
-                                    ? Colors.black
-                                    : Colors.black45,
-                              ),
-                            );
-                          },
-                        );
-                      }).toList(),
-                    ),
+                ),
+                Container(
+                  margin: const EdgeInsets.symmetric(
+                    vertical: 30,
                   ),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    margin: const EdgeInsets.only(
-                      top: 5,
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 25,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget._data['p_name'],
-                          style: Theme.of(context).textTheme.headline4,
-                        ),
-                        const Divider(
-                          height: 10,
-                          color: Colors.white,
-                        ),
-                        Text(
-                          widget._data['p_category'],
-                        ),
-                        const Divider(
-                          height: 10,
-                          color: Colors.white,
-                        ),
-                        Text(
-                          widget._data['p_description'],
-                          style: const TextStyle(color: Colors.black54),
-                        )
-                      ],
-                    ),
-                  )
-                ],
-              ),
+                  alignment: Alignment.center,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: widget.indicatorList.map((i) {
+                      return Builder(
+                        builder: (BuildContext context) {
+                          return AnimatedContainer(
+                            margin: const EdgeInsets.symmetric(horizontal: 5),
+                            width: i == widget.indicatorIndex ? 20 : 10,
+                            height: 10,
+                            duration: const Duration(milliseconds: 100),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: i == widget.indicatorIndex
+                                  ? Colors.black
+                                  : Colors.black45,
+                            ),
+                          );
+                        },
+                      );
+                    }).toList(),
+                  ),
+                ),
+                Container(
+                  alignment: Alignment.topLeft,
+                  margin: const EdgeInsets.only(
+                    top: 5,
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 25,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget._data['p_name'],
+                        style: Theme.of(context).textTheme.headline4,
+                      ),
+                      const Divider(
+                        height: 10,
+                        color: Colors.white,
+                      ),
+                      Text(
+                        widget._data['p_category'],
+                      ),
+                      const Divider(
+                        height: 10,
+                        color: Colors.white,
+                      ),
+                      Text(
+                        widget._data['p_description'],
+                        style: const TextStyle(color: Colors.black54),
+                      )
+                    ],
+                  ),
+                )
+              ],
             ),
           );
   }
@@ -135,6 +135,7 @@ class ProductDetailsBottomNavWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    CartAction cartAction = CartAction();
     return !isLoaded
         ? const Center(
             child: CircularProgressIndicator(),
@@ -163,7 +164,13 @@ class ProductDetailsBottomNavWidget extends StatelessWidget {
                 ),
                 Expanded(
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: () => cartAction.addToCart(
+                      id: _data['id'].toString(),
+                      name: _data['p_name'],
+                      currency: _data['s_currency'],
+                      price: double.parse(_data['p_price']),
+                      qty: 1,
+                    ),
                     icon: const Icon(Icons.add),
                     iconSize: 25,
                     splashRadius: 25,
@@ -176,16 +183,20 @@ class ProductDetailsBottomNavWidget extends StatelessWidget {
                       splashFactory: InkSparkle.splashFactory,
                       fixedSize:
                           MaterialStateProperty.all(const Size.fromHeight(40)),
-                      backgroundColor: MaterialStateProperty.all(Colors.blue),
+                      backgroundColor: MaterialStateProperty.all(
+                          Theme.of(context).colorScheme.primary),
                       shape: MaterialStateProperty.all(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0),
                         ),
                       ),
                     ),
-                    child: const Text(
+                    child: Text(
                       'BUY',
-                      style: TextStyle(color: Colors.white, fontSize: 18),
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        fontSize: 18,
+                      ),
                     ),
                   ),
                 )

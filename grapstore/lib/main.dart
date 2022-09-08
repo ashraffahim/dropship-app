@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import './instance/home.dart';
 import './instance/product.dart';
 import './instance/auth.dart';
+import './instance/browser.dart';
 
 void main() => runApp(
       MaterialApp(
@@ -12,6 +13,10 @@ void main() => runApp(
           fontFamily: 'Rubik',
           textTheme: const TextTheme(
             headline1: TextStyle(
+              fontFamily: 'Poppins',
+              fontWeight: FontWeight.w900,
+            ),
+            headline5: TextStyle(
               fontFamily: 'Poppins',
               fontWeight: FontWeight.w900,
             ),
@@ -28,9 +33,9 @@ void main() => runApp(
             error: Color.fromARGB(255, 255, 0, 0),
             onError: Color.fromARGB(255, 255, 255, 255),
             background: Color.fromARGB(255, 255, 255, 255),
-            onBackground: Color.fromARGB(255, 0, 0, 0),
-            surface: Color.fromARGB(255, 225, 225, 225),
-            onSurface: Color.fromARGB(255, 31, 70, 144),
+            onBackground: Color.fromARGB(255, 31, 70, 144),
+            surface: Color.fromARGB(255, 250, 250, 250),
+            onSurface: Color.fromARGB(255, 0, 0, 0),
           ),
           inputDecorationTheme: const InputDecorationTheme(
             filled: true,
@@ -58,9 +63,10 @@ void main() => runApp(
         routes: {
           '/': (BuildContext context) => const Home(),
           '/product': (BuildContext context) =>
-              Product(ModalRoute.of(context)!.settings.arguments as int),
+              Product(ModalRoute.of(context)!.settings.arguments.toString()),
           '/login': (BuildContext context) => Auth('login'),
           '/signup': (BuildContext context) => Auth('signup'),
+          '/browser': (BuildContext context) => const Browser(),
         },
       ),
     );

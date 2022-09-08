@@ -7,7 +7,18 @@ class HomeAppBar extends StatelessWidget {
   PreferredSizeWidget build(BuildContext context) {
     return AppBar(
       title: Text('Home'),
-      centerTitle: true,
+      actions: [
+        IconButton(
+          onPressed: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('No Notifications'),
+              ),
+            );
+          },
+          icon: const Icon(Icons.notifications),
+        )
+      ],
       backgroundColor: Colors.white70,
       foregroundColor: Colors.black87,
       shadowColor: Colors.black12,
