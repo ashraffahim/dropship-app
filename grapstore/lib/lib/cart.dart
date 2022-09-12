@@ -57,7 +57,7 @@ class CartAction {
     return double.parse(res['data']);
   }
 
-  Future<dynamic> createInvoice(Map data) async {
+  Future<Map> createInvoice(Map data) async {
     Session session = Session();
     Map res = await session.post('/checkout/order', data);
     return res;

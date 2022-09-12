@@ -13,7 +13,7 @@ class ProductDetailsWidget extends StatefulWidget {
   ProductDetailsWidget(this._data, this.isLoaded, {Key? key})
       : super(key: key) {
     if (isLoaded) {
-      for (var i = 0; i < _data['p_image']; i++) {
+      for (var i = 0; i < int.parse(_data['p_image']); i++) {
         items.add(
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10),

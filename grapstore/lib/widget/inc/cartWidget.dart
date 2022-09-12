@@ -356,7 +356,7 @@ class _CartWidgetState extends State<CartWidget> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ElevatedButton(
-                      onPressed: checkout,
+                      onPressed: () => checkout(context),
                       style: ButtonStyle(
                         elevation: MaterialStateProperty.all(3.0),
                         backgroundColor: MaterialStateProperty.all(
@@ -461,7 +461,7 @@ class _CartWidgetState extends State<CartWidget> {
     }
   }
 
-  Future<void> checkout() async {
+  Future<void> checkout(context) async {
     // Check logged in
     SharedPreferences prefs = await _prefs;
     if (prefs.getStringList('user') == null) {
@@ -649,7 +649,10 @@ class _CartWidgetState extends State<CartWidget> {
         }
 
         // Create invoice
-        cartAction.createInvoice(data);
+        Map id = await cartAction.createInvoice(data);
+
+        // Redirect to browser for payment
+        Navigator.pushNamed(context, '/browser', arguments: id['id']);
       }
     }
   }

@@ -5,6 +5,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class Browser extends StatefulWidget {
+  final String id;
+
+  const Browser(this.id, {Key? key}) : super(key: key);
+
   @override
   BrowserState createState() => BrowserState();
 }
@@ -23,20 +27,31 @@ class BrowserState extends State<Browser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        leading: const BackButton(),
+        backgroundColor: Colors.transparent,
+        foregroundColor: Colors.black87,
+        shadowColor: Colors.black12,
+      ),
       body: SafeArea(
         child: FutureBuilder(
           future: getCookie(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
+              String cookie = RegExp('PHPSESSID=(.*)')
+                  .firstMatch(snapshot.data.toString())![1]
+                  .toString();
               return WebView(
                 onWebViewCreated: (controller) {
                   _webViewController = controller;
                   controller.runJavascript('''const d = new Date();
                   d.setTime(d.getTime() + (7*24*60*60*1000));
                   let expires = "expires="+ d.toUTCString();
-                  document.cookie = "PHPSESSID=${snapshot.data};" + expires + ";path=/";location.reload()''');
+                  document.cookie = "$cookie;" + expires + ";path=/";location.reload()''');
                 },
-                initialUrl: 'https://grap.store/checkout/pay/stripe/1',
+                initialUrl:
+                    'https://api.grap.store/checkout/pay/stripe/${widget.id}?sessid=$cookie',
                 javascriptMode: JavascriptMode.unrestricted,
               );
             } else if (snapshot.hasError) {
