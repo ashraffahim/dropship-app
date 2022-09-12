@@ -59,14 +59,14 @@ void main() => runApp(
             ),
           ),
         ),
-        initialRoute: '/',
+        initialRoute: '/browser',
         routes: {
           '/': (BuildContext context) => const Home(),
           '/product': (BuildContext context) =>
               Product(ModalRoute.of(context)!.settings.arguments.toString()),
           '/login': (BuildContext context) => Auth('login'),
           '/signup': (BuildContext context) => Auth('signup'),
-          '/browser': (BuildContext context) => const Browser(),
+          '/browser': (BuildContext context) => Browser(),
         },
       ),
     );

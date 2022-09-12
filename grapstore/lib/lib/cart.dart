@@ -1,3 +1,4 @@
+import 'package:grapstore/lib/session.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CartAction {
@@ -48,5 +49,17 @@ class CartAction {
         prefs.remove(k);
       }
     }
+  }
+
+  Future<double> serviceCharge() async {
+    Session session = Session();
+    Map res = await session.get('/cart/service-charge');
+    return double.parse(res['data']);
+  }
+
+  Future<dynamic> createInvoice(Map data) async {
+    Session session = Session();
+    Map res = await session.post('/checkout/order', data);
+    return res;
   }
 }
